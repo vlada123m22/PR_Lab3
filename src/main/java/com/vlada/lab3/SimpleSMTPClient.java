@@ -8,10 +8,10 @@ public class SimpleSMTPClient {
 
     public static void main(String[] args) {
         // SMTP server configuration
-        String smtpHost = "smtp.gmail.com"; // Replace with your SMTP server
-        String smtpPort = "587"; // Port for TLS
-        String username = "labprtest@gmail.com"; // Your email
-        String password = "whtc wsid vdcr zvaj"; // Your email password (or app password if using Gmail)
+        String smtpHost = "smtp.gmail.com";
+        String smtpPort = "587";
+        String username = "labprtest@gmail.com";
+        String password = "whtc wsid vdcr zvaj";
 
         // Recipient's email and message details
         String recipientEmail = "vlada.musin@gmail.com";
