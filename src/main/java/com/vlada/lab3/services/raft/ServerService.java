@@ -14,6 +14,8 @@ public class ServerService  {
     public static ArrayList<Server> servers;
     public static Server leader;
 
+    private ArrayList<Thread> serverThreads;
+
 
     public ServerService() {
         Random random = new Random();
@@ -29,9 +31,13 @@ public class ServerService  {
 
     public void runServers(){
         for (Server server : servers) {
-            Thread thread = new Thread(server);
+            Thread thread = new Thread(server, server.getServerId());
             thread.start();
         }
+    }
+
+    public void killServer(String serverId){
+
     }
 
     //TODO

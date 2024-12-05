@@ -18,30 +18,51 @@ public class Server implements Runnable {
         @Override
             public void run() {
             //candidate but only if lasthearbeat is null or timedout
-            if (Server.this.timeoutDateTime == null || Server.this.timeoutDateTime.isBefore(LocalDateTime.now())) {
-
-                int upvotes = 0;
-                int downvotes = 0;
+            if (!Server.this.inVotingSession && (Server.this.timeoutDateTime == null || Server.this.timeoutDateTime.isBefore(LocalDateTime.now()))) {
                 for (Server server : servers) {
                     server.setInVotingSession(true);
                 }
+
+                System.out.println(LocalDateTime.now().toString() + " " + Server.this.serverId + " timeot DateTime: " + timeoutDateTime);
+                System.out.println("A new term started. " + Server.this.serverId + " becomes a candidate");
+                int upvotes = 0;
+                int downvotes = 0;
+
                 //TODO increment by 1 every time a server votes yes
                 for (Server server : servers) {
                     if (server.vote(Server.this)) upvotes++;
                     else downvotes++;
-                }
-                for (Server server : servers) {
-                    server.setInVotingSession(false);
                 }
 
                 //if the majority voted for this server, make it the leader
                 if(upvotes>downvotes){
                     for (Server server : servers) {
                         server.setLeader(Server.this);
+                        server.setTimeoutDateTime(LocalDateTime.now().minusNanos(1000000L*server.getTimeoutMilisec()));
                     }
                     ServerService.leader = Server.this.leader;
+                    System.out.println(Server.this.serverId + " became the leader");
+                }else System.out.println(Server.this.serverId + " did not become the leader");
+
+                for (Server server : servers) {
+                    server.setInVotingSession(false);
                 }
 
+            }
+        }
+    }
+
+
+
+
+    class HeartbeatTask extends TimerTask{
+
+        @Override
+        public void run() {
+            if (Server.this.leader == Server.this){
+                Server.this.sendHeartbeat();
+
+                System.out.println("Heartbeat sent from " + Server.this.serverId);
             }
         }
     }
@@ -68,16 +89,16 @@ public class Server implements Runnable {
         Random random = new Random();
         //timeout in miliseconds
         this.timeoutMilisec = random.nextInt(1000,2000);
-        this.timeoutDateTime = LocalDateTime.now().plusNanos(this.timeoutMilisec* 1000L);
+        this.timeoutDateTime = LocalDateTime.now().plusNanos(this.timeoutMilisec* 1000000L);
         this.term = 0;
         this.inVotingSession=false;
-
     }
 
     void sendHeartbeat(){
         for(Server server: servers){
             server.setLastHeartbeat(LocalDateTime.now());
-            server.setTimeoutDateTime(server.lastHeartbeat.plusNanos(server.timeoutMilisec* 1000L));
+            server.setTimeoutDateTime(server.lastHeartbeat.plusNanos(server.timeoutMilisec* 1000000L));
+
         }
     }
 
@@ -97,12 +118,17 @@ public class Server implements Runnable {
 
     @Override
     public void run() {
-
+            System.out.println( this.getServerId() + " is running");
             Timer timer = new Timer();
-            TimerTask task = new NewTermTask();
+            TimerTask selfelection = new NewTermTask();
+            TimerTask heartbeat = new HeartbeatTask();
 
-            //check for the heartbeat
-            timer.schedule(task, timeoutMilisec, timeoutMilisec);
+
+            //check for the heartbeat and become a candidate if the case
+            timer.schedule(selfelection, timeoutMilisec, timeoutMilisec);
+
+            //Send Heartbeats
+            timer.schedule(heartbeat,500,500);
 
     }
 
