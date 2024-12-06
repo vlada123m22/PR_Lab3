@@ -1,6 +1,6 @@
 package com.vlada.lab3.controllers;
 
-import com.vlada.lab3.services.ServerService;
+import com.vlada.lab3.services.raft.ServerService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

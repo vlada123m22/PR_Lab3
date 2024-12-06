@@ -1,4 +1,4 @@
-package com.vlada.lab3.entities;
+package com.vlada.lab3.entities.raft;
 
 import jakarta.persistence.*;
 

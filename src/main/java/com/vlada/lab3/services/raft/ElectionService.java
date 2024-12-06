@@ -1,6 +1,5 @@
-package com.vlada.lab3.services;
+package com.vlada.lab3.services.raft;
 
-import lombok.Data;
 import org.springframework.stereotype.Service;
 
 @Service

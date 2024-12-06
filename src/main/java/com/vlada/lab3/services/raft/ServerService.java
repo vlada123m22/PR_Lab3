@@ -1,8 +1,7 @@
-package com.vlada.lab3.services;
+package com.vlada.lab3.services.raft;
 
-import com.vlada.lab3.entities.Server;
+import com.vlada.lab3.entities.raft.Server;
 import lombok.Data;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

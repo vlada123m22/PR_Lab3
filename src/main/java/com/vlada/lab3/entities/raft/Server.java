@@ -1,12 +1,8 @@
-package com.vlada.lab3.entities;
+package com.vlada.lab3.entities.raft;
 
-import com.vlada.lab3.repository.ServerLogRepository;
-import com.vlada.lab3.services.ServerService;
+import com.vlada.lab3.services.raft.ServerService;
 import lombok.Data;
-import org.springframework.scheduling.config.Task;
-import org.springframework.stereotype.Service;
 
-import javax.swing.text.TabSet;
 import java.time.LocalDateTime;
 import java.util.*;
 
